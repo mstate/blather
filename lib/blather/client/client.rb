@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), *%w[.. .. blather])
-
+require 'thread_safe'
 module Blather
   # # Blather Client
   #
@@ -60,8 +60,10 @@ module Blather
       @state = :initializing
 
       @status = Stanza::Presence::Status.new
-      @handlers = {}
-      @tmp_handlers = {}
+      # @handlers = {}
+      # @tmp_handlers = {}
+      @handlers = ThreadSafe::Cache.new
+      @tmp_handlers = ThreadSafe::Cache.new
       @filters = {:before => [], :after => []}
       @roster = Roster.new self
       @caps = Stanza::Capabilities.new
